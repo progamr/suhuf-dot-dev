@@ -25,10 +25,10 @@ export class User {
   @Property({ hidden: true })
   passwordHash!: string;
 
-  @Property()
+  @Property({ onCreate: () => new Date(), defaultRaw: 'CURRENT_TIMESTAMP' })
   createdAt: Date = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onCreate: () => new Date(), onUpdate: () => new Date(), defaultRaw: 'CURRENT_TIMESTAMP' })
   updatedAt: Date = new Date();
 
   // Relations

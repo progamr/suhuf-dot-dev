@@ -1,55 +1,34 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { Header } from '@/components/Header';
-import { SearchBar } from '@/components/SearchBar';
 import { FilterPanel, FilterValues } from '@/components/filters/FilterPanel';
 import { ActiveFilters } from '@/components/ActiveFilters';
-import { ArticleCard } from '@/components/ArticleCard';
 import { ArticleCardSkeletonList } from '@/components/ArticleCardSkeleton';
 import { EmptyState } from '@/components/EmptyState';
 import { GoToTopButton } from '@/components/GoToTopButton';
-import { Option } from '@/components/filters/MultiSelect';
+import { useGetArticlesFilterOptionsQuery } from '../../state/queries/getArticlesFilterOptionsQuery';
+import { ArticlesSearchBar } from './ArticlesSearchBar/ArticlesSearchBar';
+import { ArticlesGrid } from './ArticlesGrid/ArticlesGrid';
 
-interface Article {
-  id: string;
-  title: string;
-  description?: string;
-  imageUrl?: string;
-  publishedAt: string;
-  source: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-  categories?: Array<{
-    id: string;
-    name: string;
-    slug: string;
-  }>;
-}
-
-interface ArticlesListClientProps {
-  categoryOptions: Option[];
-  sourceOptions: Option[];
-  authorOptions: Option[];
-}
-
-export function ArticlesListClient({
-  categoryOptions,
-  sourceOptions,
-  authorOptions,
-}: ArticlesListClientProps) {
+export function ArticlesList() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { ref, inView } = useInView();
   const { status } = useSession();
 
   const isAuthenticated = status === 'authenticated';
+
+  // Fetch filter options
+  const { data: filterOptions } = useGetArticlesFilterOptionsQuery();
+
+  const categoryOptions = useMemo(() => filterOptions?.categoryOptions || [], [filterOptions]);
+  const sourceOptions = useMemo(() => filterOptions?.sourceOptions || [], [filterOptions]);
+  const authorOptions = useMemo(() => filterOptions?.authorOptions || [], [filterOptions]);
 
   // Parse initial filters from URL
   const getInitialFilters = (): FilterValues => {
@@ -71,6 +50,24 @@ export function ArticlesListClient({
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [filters, setFilters] = useState<FilterValues>(getInitialFilters());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Update filters when options are loaded and URL params exist
+  useEffect(() => {
+    if (categoryOptions.length > 0 || sourceOptions.length > 0 || authorOptions.length > 0) {
+      const categoryIds = searchParams.get('categories')?.split(',').filter(Boolean) || [];
+      const sourceIds = searchParams.get('sources')?.split(',').filter(Boolean) || [];
+      const authorIds = searchParams.get('authors')?.split(',').filter(Boolean) || [];
+      
+      if (categoryIds.length > 0 || sourceIds.length > 0 || authorIds.length > 0) {
+        setFilters(prev => ({
+          ...prev,
+          categories: categoryOptions.filter((opt) => categoryIds.includes(opt.value)),
+          sources: sourceOptions.filter((opt) => sourceIds.includes(opt.value)),
+          authors: authorOptions.filter((opt) => authorIds.includes(opt.value)),
+        }));
+      }
+    }
+  }, [categoryOptions, sourceOptions, authorOptions, searchParams]);
 
   // Build query string for API
   const buildQueryString = (searchValue: string, filterValues: FilterValues, pageNum: number) => {
@@ -119,7 +116,6 @@ export function ArticlesListClient({
     isFetchingNextPage,
     isLoading,
     isError,
-    refetch,
   } = useInfiniteQuery({
     queryKey: ['articles', search, filters],
     queryFn: fetchArticles,
@@ -239,54 +235,45 @@ export function ArticlesListClient({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <Header isAuthenticated={isAuthenticated} />
 
-      {/* Search & Filter Section */}
-      <div className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold mb-4">Articles</h1>
+      <ArticlesSearchBar
+        value={search}
+        onChange={handleSearchChange}
+        onFilterClick={() => setIsFilterOpen(!isFilterOpen)}
+        filterCount={filterCount}
+      />
 
-          {/* Search & Filter */}
-          <div className="relative">
-            <SearchBar
-              value={search}
-              onChange={handleSearchChange}
-              onFilterClick={() => setIsFilterOpen(!isFilterOpen)}
-              filterCount={filterCount}
-            />
-
-            <FilterPanel
-              isOpen={isFilterOpen}
-              onClose={() => setIsFilterOpen(false)}
-              filters={filters}
-              onApply={handleFilterApply}
-              categoryOptions={categoryOptions}
-              sourceOptions={sourceOptions}
-              authorOptions={authorOptions}
-            />
-          </div>
-
-          {/* Active Filters */}
-          {hasActiveFilters && (
-            <ActiveFilters
-              categories={filters.categories}
-              sources={filters.sources}
-              authors={filters.authors}
-              dateFrom={filters.dateFrom}
-              dateTo={filters.dateTo}
-              onRemoveCategory={handleRemoveCategory}
-              onRemoveSource={handleRemoveSource}
-              onRemoveAuthor={handleRemoveAuthor}
-              onRemoveDateFrom={handleRemoveDateFrom}
-              onRemoveDateTo={handleRemoveDateTo}
-              onClearAll={handleClearAll}
-            />
-          )}
+      <div className="container mx-auto px-4">
+        <div className="relative">
+          <FilterPanel
+            isOpen={isFilterOpen}
+            onClose={() => setIsFilterOpen(false)}
+            filters={filters}
+            onApply={handleFilterApply}
+            categoryOptions={categoryOptions}
+            sourceOptions={sourceOptions}
+            authorOptions={authorOptions}
+          />
         </div>
+
+        {hasActiveFilters && (
+          <ActiveFilters
+            categories={filters.categories}
+            sources={filters.sources}
+            authors={filters.authors}
+            dateFrom={filters.dateFrom}
+            dateTo={filters.dateTo}
+            onRemoveCategory={handleRemoveCategory}
+            onRemoveSource={handleRemoveSource}
+            onRemoveAuthor={handleRemoveAuthor}
+            onRemoveDateFrom={handleRemoveDateFrom}
+            onRemoveDateTo={handleRemoveDateTo}
+            onClearAll={handleClearAll}
+          />
+        )}
       </div>
 
-      {/* Content */}
       <main className="container mx-auto px-4 py-8">
         {isLoading ? (
           <ArticleCardSkeletonList count={20} />
@@ -298,36 +285,15 @@ export function ArticlesListClient({
             onClearFilters={hasActiveFilters ? handleClearAll : undefined}
           />
         ) : (
-          <>
-            <div className="space-y-4">
-              {articles.map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </div>
-
-            {/* Loading more indicator */}
-            {isFetchingNextPage && (
-              <div className="mt-8">
-                <ArticleCardSkeletonList count={5} />
-              </div>
-            )}
-
-            {/* Intersection observer trigger */}
-            {hasNextPage && !isFetchingNextPage && (
-              <div ref={ref} className="h-20" />
-            )}
-
-            {/* No more articles */}
-            {!hasNextPage && articles.length > 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                No more articles to load
-              </div>
-            )}
-          </>
+          <ArticlesGrid
+            articles={articles}
+            isFetchingMore={isFetchingNextPage}
+            hasMore={hasNextPage}
+            loadMoreRef={ref}
+          />
         )}
       </main>
 
-      {/* Go to Top Button */}
       <GoToTopButton />
     </div>
   );

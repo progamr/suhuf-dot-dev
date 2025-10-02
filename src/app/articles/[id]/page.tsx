@@ -1,4 +1,4 @@
-import { ArticleDetailClient } from './ArticleDetailClient';
+import { ArticleDetail } from '@/modules/feed/components/ArticleDetail';
 
 interface ArticleDetailPageProps {
   params: {
@@ -7,5 +7,5 @@ interface ArticleDetailPageProps {
 }
 
 export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
-  return <ArticleDetailClient articleId={params.id} />;
+  return <ArticleDetail articleId={params.id} />;
 }

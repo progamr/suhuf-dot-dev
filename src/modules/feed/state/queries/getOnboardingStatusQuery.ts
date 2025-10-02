@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { getOnboardingStatusRequest, OnboardingStatus } from '../../requests/getOnboardingStatusRequest';
+import { getOnboardingStatusRequest, OnboardingStatus } from '../requests/getOnboardingStatusRequest';
 
 export function useGetOnboardingStatusQuery(): UseQueryResult<OnboardingStatus, Error> {
   return useQuery({

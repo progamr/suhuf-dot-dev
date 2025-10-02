@@ -25,11 +25,14 @@ export const authService = {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
     // Create user
+    const now = new Date();
     const user = em.create(User, {
       email,
       passwordHash,
       name,
       emailVerified: undefined,
+      createdAt: now,
+      updatedAt: now,
     });
 
     await em.persistAndFlush(user);
@@ -92,6 +95,7 @@ export const authService = {
       identifier: email,
       token,
       expires,
+      createdAt: new Date(),
     });
 
     await em.persistAndFlush(verificationToken);

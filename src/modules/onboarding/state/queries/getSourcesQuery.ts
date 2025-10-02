@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { getSourcesRequest } from '../../requests/getSourcesRequest';
+import { getSourcesRequest } from '../requests/getSourcesRequest';
 import { Source } from '@/types/onboarding';
 
 export function useGetSourcesQuery(): UseQueryResult<Source[], Error> {

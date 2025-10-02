@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { getCategoriesRequest } from '../../requests/getCategoriesRequest';
+import { getCategoriesRequest } from '../requests/getCategoriesRequest';
 import { Category } from '@/types/feed';
 
 export function useGetCategoriesQuery(): UseQueryResult<Category[], Error> {

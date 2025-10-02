@@ -21,4 +21,7 @@ export const ENDPOINTS = {
   AUTHORS: '/api/authors',
   USER_PREFERENCES: '/api/user/preferences',
   USER_ONBOARDING_STATUS: '/api/user/onboarding-status',
+  
+  // Articles endpoints
+  ARTICLES_FILTER_OPTIONS: '/api/articles/filter-options',
 } as const;
