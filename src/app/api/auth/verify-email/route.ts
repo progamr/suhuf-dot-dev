@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/modules/auth/services/authService';
-import { verifyEmailSchema } from '@/modules/auth/utils/validation';
+import { verifyEmailSchema } from '@/modules/auth/validation/authSchemas';
 import { z } from 'zod';
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const token = searchParams.get('token');
+    const body = await request.json();
 
     // Validate input
-    const validatedData = verifyEmailSchema.parse({ token });
+    const validatedData = verifyEmailSchema.parse(body);
 
     // Verify email
     const user = await authService.verifyEmail(validatedData.token);

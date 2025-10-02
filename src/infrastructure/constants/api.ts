@@ -14,6 +14,8 @@ export const ENDPOINTS = {
   AUTH_LOGIN: '/api/auth/signin',
   AUTH_LOGOUT: '/api/auth/signout',
   AUTH_SIGNUP: '/api/auth/signup',
+  AUTH_VERIFY_EMAIL: '/api/auth/verify-email',
+  AUTH_RESEND_VERIFICATION: '/api/auth/resend-verification',
   
   // Onboarding endpoints
   SOURCES: '/api/sources',

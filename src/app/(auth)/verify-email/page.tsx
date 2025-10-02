@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useVerifyEmailMutation } from '@/modules/auth/queries/verifyEmailMutation';
+import { useVerifyEmailMutation } from '@/modules/auth/state/mutations/verifyEmailMutation';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
@@ -15,8 +15,9 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     if (token) {
-      verifyEmailMutation.mutate(token);
+      verifyEmailMutation.mutate({ token });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   return (

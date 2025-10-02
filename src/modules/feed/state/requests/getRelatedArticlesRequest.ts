@@ -1,3 +1,4 @@
+import { ENDPOINTS } from '@/infrastructure/constants/api';
 import { Article } from '@/types/feed';
 
 interface GetRelatedArticlesParams {
@@ -15,7 +16,7 @@ export async function getRelatedArticlesRequest({
   if (categoryIds) params.set('categories', categoryIds);
   if (sourceId) params.set('source', sourceId);
   
-  const response = await fetch(`/api/articles/${articleId}/related?${params.toString()}`);
+  const response = await fetch(`${ENDPOINTS.ARTICLE_RELATED(articleId)}?${params.toString()}`);
   
   if (!response.ok) {
     throw new Error('Failed to fetch related articles');

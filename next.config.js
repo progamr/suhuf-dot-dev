@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable standalone output for Docker
+  output: 'standalone',
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Don't bundle these server-only modules on the client

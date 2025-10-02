@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { loginSchema, type LoginInput } from '../utils/validation';
-import { useSignInMutation } from '../queries/signInMutation';
+import { loginSchema, type LoginInput } from '../validation/authSchemas';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
@@ -14,7 +15,8 @@ import { Loader2, Mail, Lock } from 'lucide-react';
 
 export function LoginForm() {
   const router = useRouter();
-  const signInMutation = useSignInMutation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -24,13 +26,33 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginInput) => {
-    signInMutation.mutate(data, {
-      onSuccess: () => {
+  const onSubmit = async (data: LoginInput) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        // Map NextAuth error codes to user-friendly messages
+        if (result.error === 'CredentialsSignin') {
+          setError('Invalid email or password');
+        } else {
+          setError(result.error);
+        }
+      } else if (result?.ok) {
         router.push('/');
         router.refresh();
-      },
-    });
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -43,9 +65,9 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {signInMutation.isError && (
+          {error && (
             <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-              {signInMutation.error instanceof Error ? signInMutation.error.message : 'Login failed'}
+              {error}
             </div>
           )}
 
@@ -85,8 +107,8 @@ export function LoginForm() {
             )}
           </div>
 
-          <Button type="submit" className="w-full" disabled={signInMutation.isPending}>
-            {signInMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Sign In
           </Button>
         </form>

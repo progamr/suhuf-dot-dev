@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/modules/auth/services/authService';
-import { signupSchema } from '@/modules/auth/utils/validation';
+import { signupSchema } from '@/modules/auth/validation/authSchemas';
 import { z } from 'zod';
 
 export async function POST(request: NextRequest) {

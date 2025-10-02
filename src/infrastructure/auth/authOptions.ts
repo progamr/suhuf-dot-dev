@@ -11,28 +11,33 @@ export const authOptions: NextAuthConfig = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials: any) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Email and password required');
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
+
+          const user = await authService.validateUser(
+            credentials.email as string,
+            credentials.password as string
+          );
+
+          if (!user) {
+            return null;
+          }
+
+          if (!user.emailVerified) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
         }
-
-        const user = await authService.validateUser(
-          credentials.email as string,
-          credentials.password as string
-        );
-
-        if (!user) {
-          throw new Error('Invalid credentials');
-        }
-
-        if (!user.emailVerified) {
-          throw new Error('Please verify your email before logging in');
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
       },
     }),
   ],
