@@ -1,0 +1,1 @@
+export { PersonalizedFeed } from './PersonalizedFeed';
