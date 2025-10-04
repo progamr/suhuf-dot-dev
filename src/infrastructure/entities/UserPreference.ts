@@ -8,6 +8,7 @@ import {
   Enum,
 } from '@mikro-orm/core';
 import { v4 } from 'uuid';
+import '../db/reflect-metadata';
 
 export enum Theme {
   LIGHT = 'light',
@@ -20,7 +21,7 @@ export class UserPreference {
   @PrimaryKey({ type: 'uuid' })
   id: string = v4();
 
-  @OneToOne('User', 'preference', { unique: true, owner: true })
+  @OneToOne({ entity: 'User', type: 'User', mappedBy: 'preference', unique: true, owner: true })
   user!: any;
 
   @Enum(() => Theme)
@@ -33,14 +34,14 @@ export class UserPreference {
   updatedAt: Date = new Date();
 
   // Preferred sources
-  @ManyToMany('Source', undefined, { owner: true })
+  @ManyToMany({ entity: 'Source', type: 'Source', owner: true })
   preferredSources = new Collection<any>(this);
 
   // Preferred categories
-  @ManyToMany('Category', undefined, { owner: true })
+  @ManyToMany({ entity: 'Category', type: 'Category', owner: true })
   preferredCategories = new Collection<any>(this);
 
   // Preferred authors
-  @ManyToMany('Author', undefined, { owner: true })
+  @ManyToMany({ entity: 'Author', type: 'Author', owner: true })
   preferredAuthors = new Collection<any>(this);
 }

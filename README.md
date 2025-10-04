@@ -1,245 +1,241 @@
 # Suhuf - News Aggregator Platform
 
-A modern news aggregator built with **React.js (Next.js 14)** and **TypeScript**, aggregating articles from multiple news sources.
+A modern, personalized news aggregator built with **Next.js 15**, **TypeScript**, and **MikroORM**. Aggregates articles from multiple trusted news sources with advanced filtering, personalization, and user authentication.
 
 ## 📋 Challenge Requirements
 
 This project fulfills the following technical assessment requirements:
 
-### ✅ Frontend Technology Stack
-- **React.js** with **TypeScript** - Type-safe React application
-- **Next.js 14** - React framework with App Router
-- **TanStack Query** - Server state management
-- **Tailwind CSS** + **shadcn/ui** - Modern UI components
+### ✅ Technology Stack
+- **Next.js 15** with **App Router** - Modern React framework
+- **TypeScript** - Full type safety across the application
+- **TanStack Query (React Query)** - Server state management
+- **MikroORM** - Type-safe ORM with PostgreSQL
+- **NextAuth.js** - Authentication and authorization
+- **Tailwind CSS** + **shadcn/ui** - Modern, accessible UI components
 
-### ✅ Data Sources (3+ Required)
-The application aggregates news from **4 sources**:
-1. **The Guardian API**
-2. **NewsAPI**
-3. **New York Times API**
-4. **BBC News RSS**
+### ✅ Data Sources (4 Sources)
+1. **The Guardian API** - UK news and international coverage
+2. **NewsAPI** - Global news aggregation
+3. **New York Times API** - Premium journalism
+4. **BBC News RSS** - Trusted British broadcasting
 
 ### ✅ Docker Containerization
-- Fully containerized with Docker
-- Docker Compose for multi-container orchestration
-- Clear documentation for running in containers (see below)
+- **Fully containerized** with Docker and Docker Compose
+- **Automated migrations** on container startup
+- **Hot reload** for development
+- **PostgreSQL 15** database container
+- **One-command setup** for reviewers
 
-### ✅ Software Development Best Practices
+### ✅ Best Practices Implemented
 
 #### **DRY (Don't Repeat Yourself)**
-- Reusable components in `/src/components` and `/src/modules/*/components`
-- Shared utilities and hooks
-- Centralized API constants and request functions
+- Reusable UI components and hooks
+- Centralized API services and request handlers
+- Shared validation schemas with Zod
 
 #### **KISS (Keep It Simple, Stupid)**
-- Clear folder structure by feature modules
-- Simple, focused components with single responsibilities
-- Straightforward data flow with React Query
+- Feature-based module structure
+- Single-responsibility components
+- Clear separation of concerns (UI, state, services)
 
 #### **SOLID Principles**
-- **Single Responsibility**: Each component/module has one clear purpose
-- **Open/Closed**: Components extensible through props, closed for modification
-- **Liskov Substitution**: Consistent interfaces across similar components
-- **Interface Segregation**: Focused prop interfaces, no bloated components
-- **Dependency Inversion**: Components depend on abstractions (hooks, services)
+- **Single Responsibility**: Each module handles one feature domain
+- **Open/Closed**: Extensible through composition and props
+- **Dependency Inversion**: Services abstracted through interfaces
 
-## 🏗️ Architecture
+#### **Additional Practices**
+- **Type Safety**: TypeScript throughout with strict mode
+- **Code Quality**: ESLint, consistent formatting
+- **Database Migrations**: Version-controlled schema changes
+- **Security**: Password hashing, JWT tokens, CSRF protection
+
+## 🏗️ Architecture & Features
 
 ### Module-Based Structure
 ```
 src/
-├── app/                    # Next.js App Router pages
+├── app/                    # Next.js 15 App Router
 ├── components/             # Shared UI components
-├── infrastructure/         # Core infrastructure (DB, auth, entities)
+├── infrastructure/         # Database, entities, auth
+│   ├── db/                # MikroORM config, migrations
+│   ├── entities/          # Database entities
+│   ├── auth/              # NextAuth.js configuration
+│   └── services/          # External API services
 └── modules/               # Feature modules
-    ├── auth/              # Authentication module
-    │   ├── components/
-    │   ├── state/
-    │   │   ├── requests/
-    │   │   ├── queries/
-    │   │   └── mutations/
-    │   ├── services/
-    │   └── validation/
-    ├── feed/              # News feed module
-    │   ├── components/
-    │   │   ├── ArticlesList/
-    │   │   ├── ArticleDetail/
-    │   │   ├── PersonalizedFeed/
-    │   │   └── PublicFeed/
-    │   └── state/
-    │       ├── requests/
-    │       ├── queries/
-    │       └── mutations/
-    └── onboarding/        # User onboarding module
-        ├── components/
-        ├── state/
-        └── validation/
+    ├── auth/              # Authentication & authorization
+    ├── feed/              # News feed & articles
+    ├── onboarding/        # User preferences setup
+    └── articles/          # Article management
 ```
 
 ### Key Features
-- **Authentication**: Email/password with JWT and email verification
-- **Personalized Feed**: User preferences for sources, categories, and authors
-- **Advanced Filtering**: Search, filter by category/source/author/date
-- **Infinite Scroll**: Optimized article loading
-- **Article Management**: Favorites, view tracking, sharing
-- **Responsive Design**: Mobile-first, dark mode support
+- ✅ **User Authentication** - Secure signup/login with email verification
+- ✅ **Personalized Feed** - Customized news based on user preferences
+- ✅ **Advanced Filtering** - Search, filter by source/category/author/date
+- ✅ **Article Management** - Favorites, view tracking, sharing
+- ✅ **Infinite Scroll** - Optimized pagination
+- ✅ **Responsive Design** - Mobile-first with dark mode
+- ✅ **Background Sync** - Automated article fetching with cron jobs
 
-## 🐳 Running with Docker
+## 🚀 Quick Start with Docker
 
 ### Prerequisites
-- Docker Desktop installed
-- Docker Compose installed
+- Docker and Docker Compose installed
+- That's it! No Node.js or PostgreSQL installation needed.
 
-### Quick Start
+### Run the Application
 
-1. **Clone the repository**
 ```bash
-git clone <repository-url>
-cd suhuf-dev
+# 1. Start the containers (builds automatically)
+docker compose up --build
+
+# 2. (Optional) Seed the database with test data
+docker compose exec app npm run seed:run
 ```
 
-2. **Set up environment variables**
-```bash
-cp .env.example .env
-# Edit .env with your API keys and configuration
-```
+**That's it!** Open http://localhost:3000
 
-3. **Build and run with Docker Compose**
-```bash
-docker-compose up --build
-```
+### What Happens Automatically
+1. PostgreSQL 15 database starts
+2. Application waits for database to be ready
+3. **Migrations run automatically** (creates all tables)
+4. Next.js development server starts
+5. Hot reload is enabled for code changes
 
-4. **Access the application**
-- Frontend: http://localhost:3000
-- Database: PostgreSQL on localhost:5432
-
-### Docker Commands
+### Useful Commands
 
 ```bash
-# Start containers
-docker-compose up
-
-# Start in detached mode
-docker-compose up -d
-
 # Stop containers
-docker-compose down
+docker compose down
 
 # View logs
-docker-compose logs -f
+docker compose logs -f app
 
-# Rebuild containers
-docker-compose up --build
+# Clean restart (removes all data)
+docker compose down -v
+docker compose up --build
 
-# Run database migrations
-docker-compose exec app npm run db:migrate
+# Run seeders manually
+docker compose exec app npm run seed:run
 ```
 
-## 🚀 Local Development (Without Docker)
+## 💻 Local Development (Without Docker)
 
 ### Prerequisites
-- Node.js 18+ and npm
-- PostgreSQL 14+
+- Node.js 20+
+- PostgreSQL 15+
 
 ### Setup
 
-1. **Install dependencies**
 ```bash
+# 1. Install dependencies
 npm install
-```
 
-2. **Set up environment variables**
-```bash
+# 2. Configure environment
 cp .env.example .env
-# Configure your .env file
-```
+# Edit .env with your database credentials and API keys
 
-3. **Set up database**
-```bash
-npm run db:migrate
-```
+# 3. Run migrations
+npm run migration:up
 
-4. **Run development server**
-```bash
+# 4. (Optional) Seed database
+npm run seed:run
+
+# 5. Start development server
 npm run dev
 ```
 
-5. **Open browser**
-```
-http://localhost:3000
-```
+Open http://localhost:3000
 
-## 📦 Environment Variables
+## 🔑 Environment Variables
 
-Required environment variables (see `.env.example`):
+The `.env` file is already configured with working defaults for Docker. For production or custom setup, update:
 
 ```env
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/suhuf
+# Database (Docker uses these defaults)
+DATABASE_URL=postgresql://amr:Prog@mr123@db:5432/suhufdev
 
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
+# Authentication
 NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3000
 
-# API Keys
-GUARDIAN_API_KEY=your-guardian-api-key
-NEWSAPI_KEY=your-newsapi-key
-NYTIMES_API_KEY=your-nytimes-api-key
+# News API Keys (required for article fetching)
+GUARDIAN_API_KEY=your-key
+NEWSAPI_KEY=your-key
+NYTIMES_API_KEY=your-key
 
-# Email (for verification)
-EMAIL_FROM=noreply@suhuf.com
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your-smtp-user
-SMTP_PASSWORD=your-smtp-password
+# Email (for user verification)
+RESEND_API_KEY=your-resend-key
 ```
 
-## 🧪 Testing
+## 📊 Database
 
+### Migrations
 ```bash
-# Run all tests
-npm test
+# Create new migration
+npm run migration:create
 
-# Run tests in watch mode
-npm run test:watch
+# Run migrations
+npm run migration:up
 
-# Run E2E tests
-npm run test:e2e
+# Rollback migration
+npm run migration:down
 ```
 
-## 📚 Documentation
+### Seeders
+```bash
+# Run seeders
+npm run seed:run
 
-- **Implementation Status**: See `/docs/IMPLEMENTATION_STATUS.md` for detailed feature implementation status
-- **API Documentation**: Available at `/api/docs` when running the app
+# Create new seeder
+npm run seed:create
+```
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- Next.js 14 (App Router)
-- TypeScript
-- React 18
-- TanStack Query (React Query)
-- Tailwind CSS
-- shadcn/ui
-- React Hook Form + Zod
+- **Next.js 15** - App Router, Server Components
+- **TypeScript 5** - Strict mode enabled
+- **React 19** - Latest features
+- **TanStack Query v5** - Server state management
+- **Tailwind CSS** - Utility-first styling
+- **shadcn/ui** - Accessible component library
+- **React Hook Form** + **Zod** - Form validation
 
 ### Backend
-- Next.js API Routes
-- MikroORM
-- PostgreSQL
-- NextAuth.js
-- bcrypt
-- node-cron
+- **Next.js API Routes** - RESTful API
+- **MikroORM 6** - Type-safe ORM
+- **PostgreSQL 15** - Relational database
+- **NextAuth.js v5** - Authentication
+- **bcrypt** - Password hashing
+- **node-cron** - Background jobs
+- **Resend** - Email service
 
 ### DevOps
-- Docker & Docker Compose
-- ESLint & Prettier
-- Husky (Git hooks)
+- **Docker** + **Docker Compose** - Containerization
+- **Node 20 Alpine** - Lightweight container
+- **ESLint** - Code quality
 
-## 📄 License
+## 📝 Project Structure Highlights
 
-MIT
+- **Type-safe entities** with MikroORM decorators
+- **Explicit relationship types** for production builds
+- **Migration-based schema** management
+- **Feature-based modules** for scalability
+- **Separation of concerns** (UI, state, services, validation)
+- **Automated background sync** for news articles
 
-## 👤 Author
+## 🎯 Challenge Completion
 
-Built as a technical assessment demonstrating modern React/TypeScript development with best practices.
+This project successfully demonstrates:
+- ✅ Modern React/TypeScript development
+- ✅ Integration with 4+ external APIs
+- ✅ Full Docker containerization
+- ✅ Production-ready best practices (DRY, KISS, SOLID)
+- ✅ Type safety and code quality
+- ✅ Scalable architecture
+
+---
+
+**Built as a technical assessment showcasing modern full-stack development with Next.js, TypeScript, and best practices.**

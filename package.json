@@ -7,6 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:standalone": "node .next/standalone/server.js",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "migration:create": "mikro-orm migration:create --config=./src/infrastructure/db/mikro-orm.config.ts",
@@ -66,6 +67,7 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "tailwindcss-animate": "^1.0.7",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3"
   },

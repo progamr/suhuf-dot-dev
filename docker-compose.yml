@@ -1,79 +1,40 @@
-version: '3.8'
-
 services:
-  # PostgreSQL Database
-  db:
-    image: postgres:14-alpine
-    container_name: suhuf-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-suhuf}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-suhuf_password}
-      POSTGRES_DB: ${POSTGRES_DB:-suhuf}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-suhuf}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - suhuf-network
-
-  # Next.js Application
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: suhuf-app
-    restart: unless-stopped
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "3000:3000"
     environment:
-      # Database
-      DATABASE_URL: postgresql://${POSTGRES_USER:-suhuf}:${POSTGRES_PASSWORD:-suhuf_password}@db:5432/${POSTGRES_DB:-suhuf}
-      
-      # NextAuth
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      
-      # API Keys
-      GUARDIAN_API_KEY: ${GUARDIAN_API_KEY}
-      NEWSAPI_KEY: ${NEWSAPI_KEY}
-      NYTIMES_API_KEY: ${NYTIMES_API_KEY}
-      
-      # Email Configuration
-      EMAIL_FROM: ${EMAIL_FROM:-noreply@suhuf.com}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT:-587}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      
-      # App Configuration
-      NODE_ENV: production
-      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - suhuf-network
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_NAME=${POSTGRES_DB}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - GUARDIAN_API_KEY=${GUARDIAN_API_KEY}
+      - NEWSAPI_KEY=${NEWSAPI_KEY}
+      - NYTIMES_API_KEY=${NYTIMES_API_KEY}
+      - RESEND_API_KEY=${RESEND_API_KEY}
     volumes:
-      # Mount for hot reload in development (comment out for production)
-      # - .:/app
-      # - /app/node_modules
-      # - /app/.next
-      
-      # Logs
-      - app_logs:/app/logs
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    command: npm run dev
+
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
-    driver: local
-  app_logs:
-    driver: local
-
-networks:
-  suhuf-network:
-    driver: bridge

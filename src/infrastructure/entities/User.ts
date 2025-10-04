@@ -7,6 +7,7 @@ import {
   Collection,
 } from '@mikro-orm/core';
 import { v4 } from 'uuid';
+import '../db/reflect-metadata';
 
 @Entity()
 export class User {
@@ -32,12 +33,12 @@ export class User {
   updatedAt: Date = new Date();
 
   // Relations
-  @OneToOne('UserPreference', 'user', { nullable: true })
+  @OneToOne({ entity: 'UserPreference', type: 'UserPreference', mappedBy: 'user', nullable: true })
   preference?: any;
 
-  @OneToMany('Favorite', 'user')
+  @OneToMany({ entity: 'Favorite', type: 'Favorite', mappedBy: 'user' })
   favorites = new Collection<any>(this);
 
-  @OneToMany('ArticleView', 'user')
+  @OneToMany({ entity: 'ArticleView', type: 'ArticleView', mappedBy: 'user' })
   views = new Collection<any>(this);
 }

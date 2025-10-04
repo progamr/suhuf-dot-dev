@@ -18,7 +18,7 @@ export class Author {
   @Property()
   name!: string;
 
-  @ManyToOne('Source', { index: true })
+  @ManyToOne({ entity: 'Source', type: 'Source', index: true })
   source!: any;
 
   @Property({ nullable: true })
@@ -31,6 +31,6 @@ export class Author {
   updatedAt: Date = new Date();
 
   // Relations
-  @OneToMany('Article', 'author')
+  @OneToMany({ entity: 'Article', type: 'Article', mappedBy: 'author' })
   articles = new Collection<any>(this);
 }

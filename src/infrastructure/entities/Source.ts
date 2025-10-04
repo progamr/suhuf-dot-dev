@@ -34,9 +34,9 @@ export class Source {
   updatedAt: Date = new Date();
 
   // Relations
-  @OneToMany('Article', 'source')
+  @OneToMany({ entity: 'Article', type: 'Article', mappedBy: 'source' })
   articles = new Collection<any>(this);
 
-  @OneToMany('Author', 'source')
+  @OneToMany({ entity: 'Author', type: 'Author', mappedBy: 'source' })
   authors = new Collection<any>(this);
 }

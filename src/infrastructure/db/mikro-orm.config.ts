@@ -2,6 +2,8 @@ import { defineConfig } from '@mikro-orm/postgresql';
 import { Migrator } from '@mikro-orm/migrations';
 import { SeedManager } from '@mikro-orm/seeder';
 import * as dotenv from 'dotenv';
+
+// Import entities explicitly
 import { User } from '../entities/User';
 import { VerificationToken } from '../entities/VerificationToken';
 import { Source } from '../entities/Source';
@@ -15,19 +17,24 @@ import { ArticleView } from '../entities/ArticleView';
 // Load environment variables
 dotenv.config();
 
-export default defineConfig({
-  entities: [
-    User,
-    VerificationToken,
-    Source,
-    Category,
-    Author,
-    Article,
-    UserPreference,
-    Favorite,
-    ArticleView,
-  ],
-  clientUrl: process.env.DATABASE_URL || 'postgresql://amr:Prog@mr123@localhost:5432/suhuf_dev',
+// In production mode, explicitly disable dynamic file access
+// This is critical for Next.js production builds
+const isProd = process.env.NODE_ENV === 'production';
+
+// Configure MikroORM with production-ready settings
+const config = defineConfig({
+  // Explicitly set discovery options for production
+  discovery: {
+    // This is critical for Next.js production builds
+    disableDynamicFileAccess: isProd,
+    // Required for production builds
+    requireEntitiesArray: isProd,
+  },
+  // List entities explicitly instead of using glob patterns
+  entities: [User, VerificationToken, Source, Category, Author, Article, UserPreference, Favorite, ArticleView],
+  
+  // Use separate connection parameters instead of a URL
+  clientUrl: process.env.DATABASE_URL,
   debug: process.env.NODE_ENV === 'development',
   migrations: {
     path: './src/infrastructure/migrations',
@@ -54,3 +61,5 @@ export default defineConfig({
     max: 10,
   },
 });
+
+export default config;

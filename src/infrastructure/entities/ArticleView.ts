@@ -6,6 +6,7 @@ import {
   Index,
 } from '@mikro-orm/core';
 import { v4 } from 'uuid';
+import '../db/reflect-metadata';
 
 @Entity()
 @Index({ properties: ['article', 'user'], options: { unique: true, nullsNotDistinct: false } })
@@ -14,10 +15,10 @@ export class ArticleView {
   @PrimaryKey({ type: 'uuid' })
   id: string = v4();
 
-  @ManyToOne('Article', { index: true })
+  @ManyToOne({ entity: 'Article', type: 'Article', index: true })
   article!: any;
 
-  @ManyToOne('User', { nullable: true })
+  @ManyToOne({ entity: 'User', type: 'User', nullable: true })
   user?: any;
 
   @Property({ nullable: true })

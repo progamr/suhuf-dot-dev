@@ -2,6 +2,9 @@
 const nextConfig = {
   // Enable standalone output for Docker
   output: 'standalone',
+  
+  // Set output file tracing root to fix lockfile warning
+  outputFileTracingRoot: __dirname,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Don't bundle these server-only modules on the client
@@ -33,10 +36,8 @@ const nextConfig = {
     return config;
   },
   
-  // Disable server components for middleware to avoid edge runtime issues
-  experimental: {
-    serverComponentsExternalPackages: ['@mikro-orm/core', '@mikro-orm/postgresql', 'bcrypt'],
-  },
+  // External packages for server components (moved from experimental)
+  serverExternalPackages: ['@mikro-orm/core', '@mikro-orm/postgresql', 'bcrypt'],
   
   images: {
     remotePatterns: [
