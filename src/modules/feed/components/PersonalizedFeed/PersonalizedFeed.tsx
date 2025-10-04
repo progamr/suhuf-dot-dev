@@ -29,7 +29,6 @@ export function PersonalizedFeed() {
         isAuthenticated={isAuthenticated} 
         onRefresh={() => refetch()} 
         refreshing={isRefetching}
-        showRefresh={true}
       />
 
       <main className="container mx-auto px-4 py-8 space-y-12">

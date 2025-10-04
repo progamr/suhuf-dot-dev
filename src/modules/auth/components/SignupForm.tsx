@@ -61,7 +61,7 @@ export function SignupForm() {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {signupMutation.isError && (
-            <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+            <div className="rounded-md bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
               {signupMutation.error instanceof Error ? signupMutation.error.message : 'An error occurred'}
             </div>
           )}
@@ -78,7 +78,7 @@ export function SignupForm() {
               />
             </div>
             {errors.name && (
-              <p className="text-sm text-destructive">{errors.name.message}</p>
+              <p className="text-sm text-red-400">{errors.name.message}</p>
             )}
           </div>
 
@@ -95,7 +95,7 @@ export function SignupForm() {
               />
             </div>
             {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
+              <p className="text-sm text-red-400">{errors.email.message}</p>
             )}
           </div>
 
@@ -112,7 +112,7 @@ export function SignupForm() {
               />
             </div>
             {errors.password && (
-              <p className="text-sm text-destructive">{errors.password.message}</p>
+              <p className="text-sm text-red-400">{errors.password.message}</p>
             )}
             <p className="text-xs text-muted-foreground">
               Must be at least 8 characters with uppercase, lowercase, number, and special character
