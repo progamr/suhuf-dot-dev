@@ -4,12 +4,13 @@ import { Article } from '@/infrastructure/entities/Article';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { searchParams } = new URL(request.url);
     const categoryIds = searchParams.get('categories')?.split(',').filter(Boolean) || [];
     const sourceId = searchParams.get('source') || '';
+    const resolvedParams = await params;
 
     const em = await getEM();
 
@@ -18,7 +19,7 @@ export async function GET(
       Article,
       {
         $and: [
-          { id: { $ne: params.id } }, // Exclude current article
+          { id: { $ne: resolvedParams.id } }, // Exclude current article
           {
             $or: [
               ...(categoryIds.length > 0 ? [{ categories: { $in: categoryIds } }] : []),

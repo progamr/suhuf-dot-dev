@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import { ArticlesList } from '@/modules/feed/components/ArticlesList';
+import { ArticleCardSkeletonList } from '@/components/ArticleCardSkeleton';
 
 export const metadata = {
   title: 'Articles - Suhuf',
@@ -6,5 +8,9 @@ export const metadata = {
 };
 
 export default function ArticlesPage() {
-  return <ArticlesList />;
+  return (
+    <Suspense fallback={<ArticleCardSkeletonList count={20} />}>
+      <ArticlesList />
+    </Suspense>
+  );
 }

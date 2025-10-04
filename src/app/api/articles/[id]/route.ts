@@ -4,14 +4,15 @@ import { Article } from '@/infrastructure/entities/Article';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const resolvedParams = await params;
     const em = await getEM();
 
     const article = await em.findOne(
       Article,
-      { id: params.id },
+      { id: resolvedParams.id },
       {
         populate: ['source', 'categories', 'author'],
       }

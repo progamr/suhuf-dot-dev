@@ -16,9 +16,7 @@ export function EmptyState({ type, onClearFilters }: EmptyStateProps) {
           <Search className="h-10 w-10 text-muted-foreground" />
         </div>
         <h3 className="text-2xl font-bold mb-2">No articles found</h3>
-        <p className="text-muted-foreground mb-6 max-w-md">
-          We couldn't find any articles matching your search criteria. Try adjusting your filters or search terms.
-        </p>
+        <p className="text-muted-foreground mb-6">We couldn&apos;t find any content matching your criteria.</p>
         {onClearFilters && (
           <Button onClick={onClearFilters} variant="outline">
             Clear All Filters

@@ -20,7 +20,7 @@ export function Header({
   refreshing = false,
   showRefresh = false 
 }: HeaderProps) {
-  const router = useRouter();
+  const _router = useRouter();
   const queryClient = useQueryClient();
 
   const handleLogout = async () => {

@@ -38,7 +38,7 @@ export function SignupForm() {
           </div>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
-            We've sent you a verification link. Please check your email to activate your account.
+            We&apos;ve sent you a verification link. Please check your email to activate your account.
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-center">

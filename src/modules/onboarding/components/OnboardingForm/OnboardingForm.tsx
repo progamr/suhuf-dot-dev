@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/Button';
 import { Loader2 } from 'lucide-react';
 import { useGetSourcesQuery } from '../../state/queries/getSourcesQuery';
@@ -24,7 +24,7 @@ interface OnboardingFormProps {
 }
 
 export function OnboardingForm({ userId: _userId }: OnboardingFormProps) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<Step>('sources');
 
   // Queries
@@ -32,7 +32,7 @@ export function OnboardingForm({ userId: _userId }: OnboardingFormProps) {
   const { data: categories = [], isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: authors = [], isLoading: authorsLoading } = useGetAuthorsQuery(50);
 
-  // Mutation
+  // Mutation with onSuccess callback
   const savePreferencesMutation = useSavePreferencesMutation();
 
   // Form
@@ -81,15 +81,16 @@ export function OnboardingForm({ userId: _userId }: OnboardingFormProps) {
     }
   };
 
-  const onSubmit = async (data: OnboardingFormData) => {
-    console.log('Form submitted with data:', data);
-    try {
-      await savePreferencesMutation.mutateAsync(data);
-      router.push('/');
-      router.refresh();
-    } catch (error) {
-      console.error('Failed to save preferences:', error);
-    }
+  const onSubmit = (data: OnboardingFormData) => {
+    savePreferencesMutation.mutate(data, {
+      onSuccess: () => {
+        // Invalidate and refetch onboarding status
+        queryClient.invalidateQueries({ queryKey: ['onboardingStatus'] });
+        
+        // Force a full page reload to ensure fresh data
+        window.location.href = '/';
+      },
+    });
   };
 
   const onError = (errors: any) => {

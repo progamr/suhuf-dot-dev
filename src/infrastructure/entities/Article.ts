@@ -53,7 +53,7 @@ export class Article {
   updatedAt: Date = new Date();
 
   // Relations
-  @ManyToMany('Category', 'articles', { owner: true })
+  @ManyToMany('Category', undefined, { owner: true, pivotTable: 'article_categories' })
   categories = new Collection<any>(this);
 
   @OneToMany('Favorite', 'article')

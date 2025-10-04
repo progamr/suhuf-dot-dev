@@ -1,11 +1,12 @@
 import { ArticleDetail } from '@/modules/feed/components/ArticleDetail';
 
 interface ArticleDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
-  return <ArticleDetail articleId={params.id} />;
+export default async function ArticleDetailPage({ params }: ArticleDetailPageProps) {
+  const resolvedParams = await params;
+  return <ArticleDetail articleId={resolvedParams.id} />;
 }

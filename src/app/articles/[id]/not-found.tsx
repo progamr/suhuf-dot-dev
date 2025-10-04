@@ -12,9 +12,7 @@ export default function ArticleNotFound() {
         <div className="text-center space-y-6 max-w-md">
           <FileQuestion className="h-24 w-24 mx-auto text-muted-foreground" />
           <h1 className="text-3xl font-bold">Article Not Found</h1>
-          <p className="text-muted-foreground">
-            The article you're looking for doesn't exist or has been removed.
-          </p>
+          <p className="text-muted-foreground mb-6">The article you&apos;re looking for doesn&apos;t exist or has been removed.</p>
           <div className="flex gap-4 justify-center">
             <Link href="/">
               <Button>Go Home</Button>

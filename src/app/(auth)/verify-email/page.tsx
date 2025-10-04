@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useVerifyEmailMutation } from '@/modules/auth/state/mutations/verifyEmailMutation';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token');
@@ -57,5 +57,22 @@ export default function VerifyEmailPage() {
         </CardFooter>
       )}
     </Card>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <Card className="w-full max-w-md mx-auto">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+          <CardTitle>Loading...</CardTitle>
+        </CardHeader>
+      </Card>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

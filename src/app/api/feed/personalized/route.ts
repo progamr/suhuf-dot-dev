@@ -83,18 +83,22 @@ export async function GET() {
       // Get all preferred categories with their articles
       const categories = await em.find(
         Category,
-        { id: { $in: categoryIds } },
-        { populate: ['articles'] }
+        { id: { $in: categoryIds } }
       );
 
       // Count articles per category and sort
-      const categoriesWithCounts = categories.map((cat: any) => ({
-        id: cat.id,
-        name: cat.name,
-        slug: cat.slug,
-        imageUrl: cat.imageUrl || null,
-        articleCount: cat.articles ? cat.articles.length : 0,
-      }));
+      const categoriesWithCounts = await Promise.all(
+        categories.map(async (cat: any) => {
+          const articleCount = await em.count(Article, { categories: cat.id });
+          return {
+            id: cat.id,
+            name: cat.name,
+            slug: cat.slug,
+            imageUrl: cat.imageUrl || null,
+            articleCount,
+          };
+        })
+      );
 
       // Sort by article count and take top 6
       topCategories = categoriesWithCounts

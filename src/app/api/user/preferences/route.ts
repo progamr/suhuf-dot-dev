@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/infrastructure/auth/auth';
 import { getEM } from '@/infrastructure/db/initDb';
 import { User } from '@/infrastructure/entities/User';
-import { UserPreference } from '@/infrastructure/entities/UserPreference';
+import { UserPreference, Theme } from '@/infrastructure/entities/UserPreference';
 import { Source } from '@/infrastructure/entities/Source';
 import { Category } from '@/infrastructure/entities/Category';
 import { Author } from '@/infrastructure/entities/Author';
@@ -111,6 +111,9 @@ export async function POST(request: Request) {
     if (!preference) {
       preference = em.create(UserPreference, {
         user: user,
+        theme: Theme.SYSTEM,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
       user.preference = preference;
     }

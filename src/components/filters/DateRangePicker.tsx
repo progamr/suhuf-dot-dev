@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Calendar } from 'lucide-react';
@@ -27,8 +27,8 @@ export function DateRangePicker({
             selected={dateFrom}
             onChange={onDateFromChange}
             selectsStart
-            startDate={dateFrom}
-            endDate={dateTo}
+            startDate={dateFrom || undefined}
+            endDate={dateTo || undefined}
             maxDate={dateTo || new Date()}
             placeholderText="Select start date"
             dateFormat="MMM d, yyyy"
@@ -47,9 +47,9 @@ export function DateRangePicker({
             selected={dateTo}
             onChange={onDateToChange}
             selectsEnd
-            startDate={dateFrom}
-            endDate={dateTo}
-            minDate={dateFrom}
+            startDate={dateFrom || undefined}
+            endDate={dateTo || undefined}
+            minDate={dateFrom || undefined}
             maxDate={new Date()}
             placeholderText="Select end date"
             dateFormat="MMM d, yyyy"

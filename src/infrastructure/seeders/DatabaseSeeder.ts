@@ -4,7 +4,7 @@ import { SyncService } from '../services/syncService';
 import { closeORM } from '../db/initDb';
 
 export class DatabaseSeeder extends Seeder {
-  async run(em: EntityManager): Promise<void> {
+  async run(_em: EntityManager): Promise<void> {
     console.log('🌱 Starting initial database seed...\n');
 
     try {

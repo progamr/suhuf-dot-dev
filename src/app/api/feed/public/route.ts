@@ -31,7 +31,6 @@ export async function GET() {
           id: category.id,
           name: category.name,
           slug: category.slug,
-          imageUrl: category.imageUrl,
           articleCount: count,
         };
       })

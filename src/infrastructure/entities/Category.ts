@@ -2,8 +2,6 @@ import {
   Entity,
   PrimaryKey,
   Property,
-  ManyToMany,
-  Collection,
 } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 
@@ -27,7 +25,5 @@ export class Category {
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  // Relations
-  @ManyToMany('Article', 'categories')
-  articles = new Collection<any>(this);
+  // Relations - removed bidirectional relationship to avoid metadata conflicts
 }

@@ -15,8 +15,9 @@ export function NoAggregatedContent({ onRefresh }: NoAggregatedContentProps) {
     <div className="flex items-center justify-center min-h-[60vh] p-4">
       <div className="text-center space-y-6 max-w-md">
         <h2 className="text-2xl font-bold">No Articles Found</h2>
+        <p className="text-muted-foreground mb-6">We&apos;re working on getting your personalized content ready.</p>
         <p className="text-muted-foreground">
-          We couldn't find any articles matching your preferences. Try updating your preferences or check back later.
+          We couldn&apos;t find any articles matching your preferences. Try updating your preferences or check back later.
         </p>
         <div className="flex gap-4 justify-center">
           <Button onClick={() => router.push('/onboarding')}>
