@@ -14,7 +14,7 @@ This project fulfills the following technical assessment requirements:
 - **NextAuth.js** - Authentication and authorization
 - **Tailwind CSS** + **shadcn/ui** - Modern, accessible UI components
 
-### ✅ Data Sources (4 Sources)
+### ✅ Data Sources (3 Sources)
 1. **The Guardian API** - UK news and international coverage
 2. **NewsAPI** - Global news aggregation
 3. **New York Times API** - Premium journalism
