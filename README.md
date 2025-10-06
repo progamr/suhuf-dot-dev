@@ -105,6 +105,10 @@ docker compose exec app npm run seed:run
 
 ![Screenshot 7](./screenshots/7.png)
 
+### App data flow, use cases design and UI mockups
+
+![Data flow and use cases](./screenshots/IMG_0976.jpeg)
+
 ### What Happens Automatically
 1. PostgreSQL 15 database starts
 2. Application waits for database to be ready
