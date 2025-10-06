@@ -108,6 +108,12 @@ docker compose exec app npm run seed:run
 ### App data flow, use cases design and UI mockups
 
 ![Data flow and use cases](./screenshots/IMG_0976.jpeg)
+![home personalized feed](./screenshots/IMG_0968.jpeg)
+![articles list](./screenshots/IMG_0969.jpeg)
+![articles list with filters](./screenshots/IMG_0970.jpeg)
+![article details](./screenshots/IMG_0971.jpeg)
+![onboarding and pref. selection](./screenshots/IMG_0972.jpeg)
+![](./screenshots/IMG_0976.jpeg)
 
 ### What Happens Automatically
 1. PostgreSQL 15 database starts
