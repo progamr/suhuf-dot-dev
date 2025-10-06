@@ -111,6 +111,9 @@ docker compose exec app npm run seed:run
 ![home personalized feed](./screenshots/IMG_0968.jpeg)
 ![articles list](./screenshots/IMG_0969.jpeg)
 ![articles list with filters](./screenshots/IMG_0970.jpeg)
+![onboarding](./screenshots/IMG_0972.jpeg)
+![auth](./screenshots/IMG_0974.jpeg)
+
 
 ### What Happens Automatically
 1. PostgreSQL 15 database starts
